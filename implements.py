@@ -65,9 +65,26 @@ class Ball(Basic):
         pygame.draw.ellipse(surface, self.color, self.rect)
 
     def collide_block(self, blocks: list):
-        # ============================================
-        # TODO: Implement an event when the ball hits a block
-        pass
+        for block in blocks:
+            if block.alive and self.rect.colliderect(block.rect):
+                if (
+                    self.rect.bottom >= block.rect.top
+                    and self.rect.top <= block.rect.top
+                ) or (
+                    self.rect.top <= block.rect.bottom
+                    and self.rect.bottom >= block.rect.bottom
+                ):
+                    self.dir = 360 - self.dir
+                if (
+                    self.rect.right >= block.rect.left
+                    and self.rect.left <= block.rect.left
+                ) or (
+                    self.rect.left <= block.rect.right
+                    and self.rect.right >= block.rect.right
+                ):
+                    self.dir = 180 - self.dir
+                block.collide()
+                break
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
