@@ -34,9 +34,8 @@ class Block(Basic):
         pygame.draw.rect(surface, self.color, self.rect)
     
     def collide(self):
-        # ============================================
-        # TODO: Implement an event when block collides with a ball
-        pass
+        self.alive = False
+        self.rect.size = (0, 0)
 
 
 class Paddle(Basic):
@@ -66,23 +65,36 @@ class Ball(Basic):
         pygame.draw.ellipse(surface, self.color, self.rect)
 
     def collide_block(self, blocks: list):
-        # ============================================
-        # TODO: Implement an event when the ball hits a block
-        pass
+        for block in blocks:
+            if block.alive and self.rect.colliderect(block.rect):
+                if (
+                    self.rect.bottom >= block.rect.top
+                    and self.rect.top <= block.rect.top
+                ) or (
+                    self.rect.top <= block.rect.bottom
+                    and self.rect.bottom >= block.rect.bottom
+                ):
+                    self.dir = 360 - self.dir
+                if (
+                    self.rect.right >= block.rect.left
+                    and self.rect.left <= block.rect.left
+                ) or (
+                    self.rect.left <= block.rect.right
+                    and self.rect.right >= block.rect.right
+                ):
+                    self.dir = 180 - self.dir
+                block.collide()
+                break
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
             self.dir = 360 - self.dir + random.randint(-5, 5)
 
     def hit_wall(self):
-        # ============================================
-        # TODO: Implement a service that bounces off when the ball hits the wall
-        pass
-        # 좌우 벽 충돌
-        
-        # 상단 벽 충돌
+        if self.rect.left <= 0 or self.rect.right >= config.display_dimension[0]:
+            self.dir = 180 - self.dir
+        if self.rect.top <= 0:
+            self.dir = 360 - self.dir
     
     def alive(self):
-        # ============================================
-        # TODO: Implement a service that returns whether the ball is alive or not
-        pass
+        return self.rect.bottom < config.display_dimension[1]
