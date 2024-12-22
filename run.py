@@ -69,6 +69,8 @@ def tick():
         if ball.alive() == False:
             BALLS.remove(ball)
 
+    ITEMS = [item for item in ITEMS if item.alive]
+
 
 def main():
     global life
@@ -90,6 +92,9 @@ def main():
 
         for block in BLOCKS:
             block.draw(surface)
+
+        for item in ITEMS:
+            item.draw(surface)
 
         cur_score = config.num_blocks[0] * config.num_blocks[1] - len(BLOCKS)
 
