@@ -69,6 +69,14 @@ def tick():
         if ball.alive() == False:
             BALLS.remove(ball)
 
+    for item in ITEMS:
+        item.move()
+        if item.alive and paddle.rect.colliderect(item.rect):
+            if item.color == (255, 0, 0):
+                new_ball = Ball(pos = (paddle.rect.centerx, paddle.rect.top - 20))
+                BALLS.append(new_ball)
+            item.alive = False
+
     ITEMS = [item for item in ITEMS if item.alive]
 
 
